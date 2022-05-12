@@ -1,0 +1,38 @@
+<h1>Use 2 different browsers when testing</h1>
+
+<input type="text" placeholder="username"><button id="login">Login</button>
+
+<br /><br />
+
+<button id="sessions">Get list of users with session</button>
+
+<ul></ul>
+
+<script>
+    document.querySelector("#login").addEventListener("click", () => {
+        const input = document.querySelector("input")
+        const config = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: input.value })
+        }
+        fetch('/login', config)
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) { return alert("Error: " + res.error) }
+                alert("Success!")
+            })
+            .catch(e => alert("ERROR!"))
+    })
+
+    document.querySelector("#sessions").addEventListener("click", () => {
+        fetch('/sessions')
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) { return alert("Error: " + res.error) }
+                const lis = res.activeSessions.map(s => `<li>${s}</li>`)
+                document.querySelector("ul").innerHTML = lis.join("")
+            })
+            .catch(e => alert("ERROR!"))
+    })
+</script>
